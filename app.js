@@ -1,5 +1,5 @@
 /* --------------------------------------------------
- * Midtown Home Improvements - Interactive Logic
+ * Lollie's Exterior Cleaning Services - Interactive Logic
  * Vanilla JavaScript - Premium Micro-interactions
  * -------------------------------------------------- */
 
