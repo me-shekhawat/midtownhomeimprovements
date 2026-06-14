@@ -120,36 +120,88 @@ document.addEventListener('DOMContentLoaded', () => {
     const showcaseMenuItems = document.querySelectorAll('.showcase-menu-item');
     const showcasePanelCards = document.querySelectorAll('.showcase-panel-card');
 
+    // Function to activate a specific service tab by index
+    const activateServiceTab = (index) => {
+        if (showcaseMenuItems.length === 0) return;
+        const item = showcaseMenuItems[index];
+        // Remove active class from all menu items
+        showcaseMenuItems.forEach(mi => mi.classList.remove('active'));
+        // Add active class to target item
+        item.classList.add('active');
+
+        const targetId = item.getAttribute('data-target');
+
+        // Toggle active class on showcase cards
+        showcasePanelCards.forEach(card => {
+            if (card.id === targetId) {
+                card.classList.add('active');
+            } else {
+                card.classList.remove('active');
+            }
+        });
+
+        // Smooth scroll sidebar menu item into view on mobile
+        const sidebar = document.querySelector('.services-showcase-sidebar');
+        if (window.innerWidth <= 1024 && sidebar) {
+            const offsetLeft = item.offsetLeft - (sidebar.offsetWidth / 2) + (item.offsetWidth / 2);
+            sidebar.scrollTo({
+                left: offsetLeft,
+                behavior: 'smooth'
+            });
+        }
+    };
+
     if (showcaseMenuItems.length > 0 && showcasePanelCards.length > 0) {
-        showcaseMenuItems.forEach(item => {
+        let currentServiceIndex = 0;
+        let serviceAutoRotateInterval = null;
+
+        // Start auto-rotating service tabs every 3 seconds
+        const startServiceAutoRotate = () => {
+            serviceAutoRotateInterval = setInterval(() => {
+                currentServiceIndex = (currentServiceIndex + 1) % showcaseMenuItems.length;
+                activateServiceTab(currentServiceIndex);
+            }, 3000);
+        };
+
+        // Stop auto-rotation
+        const stopServiceAutoRotate = () => {
+            if (serviceAutoRotateInterval) {
+                clearInterval(serviceAutoRotateInterval);
+                serviceAutoRotateInterval = null;
+            }
+        };
+
+        // Manual click handler — pause auto-rotate, resume after 8s
+        showcaseMenuItems.forEach((item, index) => {
             item.addEventListener('click', () => {
-                // Remove active class from all menu items
-                showcaseMenuItems.forEach(mi => mi.classList.remove('active'));
-                // Add active class to clicked item
-                item.classList.add('active');
-
-                const targetId = item.getAttribute('data-target');
-
-                // Toggle active class on showcase cards
-                showcasePanelCards.forEach(card => {
-                    if (card.id === targetId) {
-                        card.classList.add('active');
-                    } else {
-                        card.classList.remove('active');
+                stopServiceAutoRotate();
+                currentServiceIndex = index;
+                activateServiceTab(index);
+                // Resume auto-rotate after 8 seconds of inactivity
+                setTimeout(() => {
+                    if (!serviceAutoRotateInterval) {
+                        startServiceAutoRotate();
                     }
-                });
-
-                // Smooth scroll sidebar menu item into view on mobile
-                const sidebar = document.querySelector('.services-showcase-sidebar');
-                if (window.innerWidth <= 1024 && sidebar) {
-                    const offsetLeft = item.offsetLeft - (sidebar.offsetWidth / 2) + (item.offsetWidth / 2);
-                    sidebar.scrollTo({
-                        left: offsetLeft,
-                        behavior: 'smooth'
-                    });
-                }
+                }, 8000);
             });
         });
+
+        // Start auto-rotate when services section comes into view
+        const servicesSection = document.getElementById('services');
+        if (servicesSection) {
+            const servicesObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        startServiceAutoRotate();
+                    } else {
+                        stopServiceAutoRotate();
+                    }
+                });
+            }, { threshold: 0.15 });
+            servicesObserver.observe(servicesSection);
+        } else {
+            startServiceAutoRotate();
+        }
     }
 
     // 4. BEFORE/AFTER DRAGGABLE COMPARISON SLIDER
@@ -161,6 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sliderContainer && afterImageDiv && sliderHandle) {
         let isSliding = false;
 
+        // Set slider position by percentage (0–100)
+        const setSliderPercent = (percent) => {
+            afterImageDiv.style.width = `${percent}%`;
+            sliderHandle.style.left = `${percent}%`;
+        };
+
         const updateSliderWidth = (xPosition) => {
             const rect = sliderContainer.getBoundingClientRect();
             // Restrict position to boundary
@@ -170,8 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Calculate percentage
             const percentage = (offset / rect.width) * 100;
-            afterImageDiv.style.width = `${percentage}%`;
-            sliderHandle.style.left = `${percentage}%`;
+            setSliderPercent(percentage);
         };
 
         // Resize handler to adjust inner image width to match the wrapper
@@ -214,6 +271,56 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isSliding) return;
             updateSliderWidth(e.touches[0].clientX);
         });
+
+        // AUTO-ANIMATE: Smoothly slide from left to right once when section is visible
+        let sliderAutoAnimated = false;
+
+        const autoAnimateSlider = () => {
+            if (sliderAutoAnimated) return;
+            sliderAutoAnimated = true;
+
+            // Add smooth CSS transition for auto-animation
+            afterImageDiv.style.transition = 'width 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+            sliderHandle.style.transition = 'left 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+
+            // Start at 50% (default)
+            setSliderPercent(50);
+
+            // Step 1: Slide to 15% (show "before")
+            setTimeout(() => {
+                setSliderPercent(15);
+            }, 400);
+
+            // Step 2: Slide to 85% (show "after")
+            setTimeout(() => {
+                setSliderPercent(85);
+            }, 1800);
+
+            // Step 3: Return to 50% center
+            setTimeout(() => {
+                setSliderPercent(50);
+            }, 3200);
+
+            // Step 4: Remove transition so manual drag is instant
+            setTimeout(() => {
+                afterImageDiv.style.transition = 'none';
+                sliderHandle.style.transition = 'none';
+            }, 4500);
+        };
+
+        // Trigger auto-animation when the before-after section scrolls into view
+        const beforeAfterSection = document.getElementById('before-after');
+        if (beforeAfterSection) {
+            const sliderObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !sliderAutoAnimated) {
+                        autoAnimateSlider();
+                        sliderObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.4 });
+            sliderObserver.observe(beforeAfterSection);
+        }
     }
 
     // 5. BEFORE/AFTER IMAGES SELECTOR SWAPPER
