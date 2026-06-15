@@ -1,0 +1,223 @@
+/* --------------------------------------------------
+ * Lollie's Exterior Cleaning Services 
+ * Custom Layout for Local City Pages
+ * Completely distinct from index.html
+ * -------------------------------------------------- */
+
+/* FULL-WIDTH HERO SECTION */
+.local-hero-full {
+    position: relative;
+    min-height: calc(100vh - 100px);
+    padding-top: 100px; /* Header offset */
+    padding-bottom: 60px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--white);
+    z-index: 1;
+}
+
+.local-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(12, 35, 64, 0.9), rgba(12, 35, 64, 0.6));
+    z-index: -1;
+}
+
+.local-hero-content {
+    max-width: 900px;
+    padding: 0 24px;
+}
+
+.local-hero-title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    color: var(--white);
+    letter-spacing: -1px;
+}
+
+.local-hero-title .highlight-green {
+    color: var(--secondary);
+}
+
+.local-hero-subtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.local-hero-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* TRUST BAR */
+.trust-bar {
+    background: var(--primary);
+    padding: 24px 0;
+    color: var(--white);
+}
+
+.trust-bar-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.trust-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.trust-icon {
+    width: 28px;
+    height: 28px;
+    fill: currentColor;
+}
+
+/* WHY CHOOSE US - 2 COLUMN LOCAL LAYOUT */
+.local-why-us {
+    padding: 100px 0;
+    background: var(--light);
+}
+
+.why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.why-image-wrapper img {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.why-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 24px;
+    color: var(--dark);
+}
+
+.why-content p {
+    font-size: 1.1rem;
+    color: var(--gray);
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+.why-list {
+    list-style: none;
+    margin-bottom: 32px;
+}
+
+.why-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+.why-list svg {
+    color: var(--secondary);
+}
+
+/* LOCAL 3-CARD SERVICES GRID */
+.local-services-section {
+    padding: 100px 0;
+    background: var(--white);
+    text-align: center;
+}
+
+.local-services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+    margin-top: 48px;
+}
+
+.local-service-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 24px;
+    transition: var(--transition);
+    text-align: left;
+}
+
+.local-service-card:hover {
+    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    transform: translateY(-5px);
+    border-color: var(--secondary);
+}
+
+.local-service-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--light);
+    color: var(--secondary);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.local-service-title {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    color: var(--dark);
+}
+
+.local-service-desc {
+    color: var(--gray);
+    line-height: 1.6;
+}
+
+/* Responsive Overrides */
+@media (max-width: 992px) {
+    .why-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .local-hero-title {
+        font-size: 2.5rem;
+    }
+}
+
+/* PREMIUM ZIG-ZAG SERVICES LAYOUT */
+.zig-zag-section { padding: 100px 0; background: var(--white); }
+.zig-zag-row { display: flex; align-items: center; gap: 60px; margin-bottom: 80px; }
+.zig-zag-row:nth-child(even) { flex-direction: row-reverse; }
+.zig-zag-image { flex: 1; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.12); }
+.zig-zag-image img { width: 100%; height: auto; display: block; object-fit: cover; transition: transform 0.5s ease; }
+.zig-zag-image:hover img { transform: scale(1.05); }
+.zig-zag-content { flex: 1; }
+.zig-zag-icon { width: 56px; height: 56px; background: rgba(122,193,67,0.1); color: var(--secondary); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+.zig-zag-icon svg { width: 32px; height: 32px; }
+.zig-zag-title { font-size: 2.2rem; font-weight: 800; color: var(--dark); margin-bottom: 20px; line-height: 1.2; }
+.zig-zag-desc { font-size: 1.15rem; color: var(--gray); line-height: 1.7; margin-bottom: 32px; }
+@media (max-width: 992px) { .zig-zag-row { flex-direction: column !important; gap: 40px; margin-bottom: 60px; } .zig-zag-title { font-size: 1.8rem; } }
